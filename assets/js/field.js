@@ -90,8 +90,7 @@
     var last = performance.now();
     (function loop(now){
       var dt = Math.min(50, now - last); last = now;
-      camY += dt * 0.07;                       // a steady ascent, visible on pale paper
-      spin += dt * 0.00003;                    // about 1.7 degrees a second
+      camY += dt * 0.022;                      // a slow, patient ascent, as on the original site
       if (camY > TOP - 200) camY = -1400;
       place(camY); draw();
       requestAnimationFrame(loop);
