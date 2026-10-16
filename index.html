@@ -1,0 +1,107 @@
+---
+layout: default
+---
+{% assign phases = "assess,design,build,operate" | split: "," %}
+<header>
+  <div class="wrap">
+    <div class="top">
+      {% include crest.html %}
+      <a href="mailto:{{ site.email }}?subject=Make%20contact">{{ site.email }}</a>
+    </div>
+    <div class="hero">
+      <h1>We prepare for the day the machines stop taking instructions.<span class="cursor"></span></h1>
+      <p class="lede">Automotive-grade security for robots and autonomous machines. <b>For the past decade, we secured cars for some of the world's largest automakers. Now we secure what comes next.</b></p>
+      <div class="strip">
+        <span>days until the EU Machinery Regulation applies &nbsp;<b id="d" data-date="{{ site.machinery_regulation_date }}">—</b></span>
+        <span>Cyber Resilience Act &nbsp;<b>phasing in</b></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <p class="label">Capability matrix</p>
+    <h2>What we build, mapped to what you will be asked for.</h2>
+    <p class="sub">Pick a regulation or standard to see the capabilities that answer it. Open any row to see what you get.</p>
+
+    <div class="chips" id="chips">
+      <button type="button" aria-pressed="true" data-k="">All</button>
+      {% for s in site.data.standards %}<button type="button" aria-pressed="false" data-k="{{ s.key }}" data-about="{{ s.about | strip | escape }}">{{ s.name }}</button>
+      {% endfor %}
+    </div>
+    <p class="about" id="about" data-total="{{ site.data.capabilities.size }}">All {{ site.data.capabilities.size }} capabilities. Choose a regulation above to narrow them down.</p>
+
+    <table class="matrix" id="matrix">
+      <thead>
+        <tr><th>Capability</th>{% for s in site.data.standards %}<th data-k="{{ s.key }}">{{ s.name }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+      {% for c in site.data.capabilities %}{% assign i = forloop.index0 %}
+        <tr class="row{% if forloop.first %} open{% endif %}" data-std="{{ c.standards | join: ' ' }}">
+          <td>
+            <button type="button" class="toggle" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="det{{ i }}">
+              <span class="cap">{{ c.name | escape }}</span><span class="desc">{{ c.summary | escape }}</span>
+            </button>
+          </td>
+          {% for s in site.data.standards %}{% if c.standards contains s.key %}
+          <td class="std on" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot on" aria-label="{{ s.name }}: yes"></i></td>{% else %}
+          <td class="std off" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot off" aria-label="{{ s.name }}: no"></i></td>{% endif %}{% endfor %}
+        </tr>
+        <tr class="detail" id="det{{ i }}" data-std="{{ c.standards | join: ' ' }}"{% unless forloop.first %} hidden{% endunless %}>
+          <td colspan="{{ site.data.standards.size | plus: 1 }}">
+            <div class="grid">
+              <div>
+                <h4>What you get</h4>
+                <ul>{% for d in c.deliverables %}<li>{{ d | escape }}</li>{% endfor %}</ul>
+                <a class="ask" href="mailto:{{ site.email }}?subject={{ c.name | url_encode | replace: '+', '%20' }}">Ask about this &rarr;</a>
+              </div>
+              <div>
+                <h4>When in the product's life</h4>
+                <div class="phase">{% for p in phases %}<span{% if c.phases contains p %} class="on"{% endif %}>{{ p | capitalize }}</span>{% endfor %}</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <p class="note">Indicative mapping to guide a first conversation. Not legal advice.</p>
+  </section>
+
+  <section>
+    <p class="label">Ways to work with us</p>
+    <h2>Start small. Stay as long as the machine does.</h2>
+    <p class="sub">Most clients start with an assessment and decide the rest from there.</p>
+    <div class="engage">
+      {% for e in site.data.engagements %}<div><span class="ph">{{ e.phase }}</span><h3>{{ e.title }}</h3><p>{{ e.text }}</p><span class="t">{{ e.term }}</span></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section>
+    <p class="label">Done before</p>
+    <h2>The same work, on machines that already carry people.</h2>
+    <ul class="record">
+      {% for r in site.data.record %}<li><span>{{ r.work }}</span><span>{{ r.context }}</span></li>
+      {% endfor %}
+    </ul>
+    <p class="fine">Delivered by our engineers in previous roles at tier-one automotive suppliers.</p>
+  </section>
+
+  <section>
+    <p class="label">How we work</p>
+    <div class="cols">
+      <div><h3>AI-accelerated</h3><p>Threat analysis, code review and vulnerability triage in days, not months.</p></div>
+      <div><h3>Engineer-verified</h3><p>Every finding and every line we ship is reviewed and signed off by an engineer.</p></div>
+      <div><h3>Your code stays yours</h3><p>Our tooling can run on your premises. Nothing leaves without your say.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>{{ site.location }}</span>
+    <a class="enlist" href="mailto:{{ site.email }}?subject=Make%20contact">Make contact</a>
+  </footer>
+
+</main>

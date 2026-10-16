@@ -1,0 +1,83 @@
+# Rows of the capability matrix.
+# standards: keys from standards.yml this capability helps with
+# phases:    which of assess / design / build / operate we deliver it in
+- name: Threat analysis & risk assessment
+  summary: Assets, threats and attack paths, turned into concrete requirements.
+  standards: [cra, mr, ai, "21434", r155, "62443"]
+  phases: [assess, design]
+  deliverables:
+    - Asset and attack-path model of your machine
+    - Risk ratings with the reasoning behind them
+    - Security requirements your team can implement
+
+- name: Secure boot & firmware integrity
+  summary: A chain of trust from ROM to application. Signed images, locked debug ports.
+  standards: [cra, mr, "21434", "62443"]
+  phases: [design, build]
+  deliverables:
+    - Boot chain design for your SoC
+    - Rollback protection and debug-port lock-down
+    - Manufacturing provisioning procedure
+
+- name: Signing infrastructure
+  summary: HSM-backed signing and key management, wired into your CI.
+  standards: [cra, r155, "62443"]
+  phases: [design, build, operate]
+  deliverables:
+    - Key hierarchy and key ceremony
+    - HSM or KMS-backed signing service
+    - CI integration and key rotation runbook
+
+- name: Secure over-the-air updates
+  summary: Signed, fail-safe updates with rollback and an audit trail.
+  standards: [cra, mr, r155]
+  phases: [design, build, operate]
+  deliverables:
+    - Update architecture and failure analysis
+    - Signed and optionally encrypted update packages
+    - Rollback, recovery and audit logging
+
+- name: Embedded Linux hardening
+  summary: Yocto with dm-verity, AppArmor, LoadPin and minimal images.
+  standards: [cra, "62443"]
+  phases: [assess, design, build]
+  deliverables:
+    - Hardening review of your current image
+    - Read-only, verified root filesystem
+    - Mandatory access control profiles for your services
+
+- name: Intrusion detection & logging
+  summary: On-device detection and tamper-evident records of every intervention.
+  standards: [cra, mr, r155, "62443"]
+  phases: [design, build, operate]
+  deliverables:
+    - Detection rules for your machine and network
+    - Tamper-evident security log
+    - Alert path to your fleet backend
+
+- name: AI model integrity
+  summary: Signed models, secure model updates, protected weights on the device.
+  standards: [ai, mr, cra]
+  phases: [assess, design, build, operate]
+  deliverables:
+    - Model signing and verification at load time
+    - Secure model update path
+    - Protection of model weights on the device
+
+- name: Vulnerability monitoring & SBOM
+  summary: Continuous CVE triage against your build, for the life of the product.
+  standards: [cra, r155, "62443"]
+  phases: [assess, operate]
+  deliverables:
+    - SBOM generated from your real build
+    - "Monthly triage: affected or not, and why"
+    - Disclosure and patch process
+
+- name: Code review & static analysis
+  summary: MISRA and security review, AI-assisted and engineer-verified.
+  standards: ["21434", "62443"]
+  phases: [assess, build]
+  deliverables:
+    - Static analysis set-up for your codebase
+    - Security review of critical components
+    - Findings verified and ranked by an engineer

@@ -1,0 +1,40 @@
+# Columns of the capability matrix.
+# key:   used in capabilities.yml and in links such as /?std=cra
+# name:  column header and filter button
+# short: label on phones
+# about: one line shown when the filter is active
+- key: cra
+  name: Cyber Resilience Act
+  short: CRA
+  about: >-
+    EU rules for every product with digital elements: secure by default, protected updates,
+    vulnerability handling for the product's whole life.
+- key: mr
+  name: Machinery Regulation
+  short: Machinery Reg.
+  about: >-
+    Regulation (EU) 2023/1230. Machines must be protected against corruption of their software,
+    and interventions must leave evidence. Applies from 20 January 2027.
+- key: ai
+  name: AI Act
+  short: AI Act
+  about: >-
+    AI used as a safety component of a machine can count as high-risk: robustness, accuracy and
+    cybersecurity must be demonstrated.
+- key: "21434"
+  name: ISO/SAE 21434
+  short: ISO 21434
+  about: >-
+    The automotive cybersecurity engineering standard. The method we bring from cars to machines.
+- key: r155
+  name: UN R155 / R156
+  short: R155/R156
+  about: >-
+    UN vehicle regulations for a cybersecurity management system and for software updates.
+    Required for vehicle type approval.
+- key: "62443"
+  name: IEC 62443
+  short: IEC 62443
+  about: >-
+    The industrial automation security standard, often used to show how machinery and its
+    components are secured.

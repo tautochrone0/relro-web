@@ -1,0 +1,18 @@
+- phase: Assess
+  title: Security assessment
+  text: >-
+    Threat analysis and a gap review against the regulations that apply to you.
+    You get a prioritised plan, not a 200-page report.
+  term: Typically 2–4 weeks
+- phase: Design · Build
+  title: Implementation
+  text: >-
+    We build secure boot, signing, updates and hardening into your product,
+    working inside your codebase with your engineers.
+  term: Scoped per project
+- phase: Operate
+  title: Continuous security
+  text: >-
+    Vulnerability monitoring against your actual build, signing operations
+    and support when something goes wrong.
+  term: Monthly

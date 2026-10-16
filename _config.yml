@@ -1,0 +1,21 @@
+title: RELRO Security
+tagline: Automotive-grade security for autonomous machines.
+description: >-
+  Automotive-grade security for robots and autonomous machines.
+  Sofia, working across the EU.
+email: contact@relro.site
+location: Sofia · working across the EU
+url: https://relro.site
+baseurl: ""
+
+# Date Regulation (EU) 2023/1230 applies; drives the countdown in the hero.
+machinery_regulation_date: "2027-01-20T00:00:00Z"
+
+# Set to true while the site is not ready for search engines.
+noindex: false
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

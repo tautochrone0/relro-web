@@ -1,0 +1,13 @@
+# "Done before" list. Keep client names out unless you have permission to use them.
+- work: Secure boot, cross-core integrity, debug lock-down and production signing
+  context: Instrument cluster · European premium automaker
+- work: "Kernel security architecture: dm-verity, AppArmor, LoadPin, cgroups"
+  context: Driver monitoring platform
+- work: Over-the-air update architecture and technical roadmap
+  context: Automotive software platform
+- work: Intrusion detection module to AUTOSAR specification
+  context: Zone ECU · Japanese automaker
+- work: Firmware security and cryptographic drivers
+  context: Vehicle-to-home charging station
+- work: Encrypted update path and hardware crypto enablement
+  context: Infotainment head unit
