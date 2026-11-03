@@ -18,12 +18,12 @@
 </head>
 <body>
 
-<canvas id="field" aria-hidden="true"></canvas>
-<div class="veil" aria-hidden="true"></div>
+{% if site.background_animation %}<canvas id="field" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>{% endif %}
 
 {{ content }}
 
-<script src="{{ '/assets/js/field.js' | relative_url }}?v={{ v }}" defer></script>
+{% if site.background_animation %}<script src="{{ '/assets/js/field.js' | relative_url }}?v={{ v }}" defer></script>{% endif %}
 <script src="{{ '/assets/js/site.js' | relative_url }}?v={{ v }}" defer></script>
 </body>
 </html>

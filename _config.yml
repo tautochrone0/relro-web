@@ -11,6 +11,9 @@ baseurl: ""
 # Date Regulation (EU) 2023/1230 applies; drives the countdown in the hero.
 machinery_regulation_date: "2027-01-20T00:00:00Z"
 
+# Background animation (the hash tree behind the page). true shows it, false leaves a plain background.
+background_animation: false
+
 # Industry tab the capability matrix opens on (a key from _data/industries.yml).
 default_industry: robotics
 
