@@ -13,7 +13,8 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--mono);f
 .wrap{max-width:1040px;margin:0 auto;padding:0 clamp(16px,5vw,56px)}
 
 /* the hash tree drifts behind the whole page, as on the dark site */
-#field{position:fixed;inset:0;z-index:0;display:block}
+/* opacity is the one knob for how strongly the animation shows */
+#field{position:fixed;inset:0;z-index:0;display:block;opacity:.4}
 .veil{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(110% 80% at 50% 45%, rgba(243,239,231,.3) 0%, rgba(243,239,231,.93) 75%)}
 header, main{position:relative;z-index:2}
