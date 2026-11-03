@@ -42,6 +42,16 @@ section{padding:clamp(44px,7vw,80px) 0;border-bottom:1px solid var(--rule)}
 h2{font-weight:400;font-size:clamp(17px,2.2vw,21px);margin:0 0 8px}
 .sub{color:var(--ash);margin:0 0 26px;max-width:64ch;font-size:14px}
 
+/* industry tabs: each industry has its own set of columns */
+.inds{display:flex;flex-wrap:wrap;gap:4px 22px;margin:0 0 18px;border-bottom:1px solid var(--rule)}
+.inds button{font:inherit;font-size:13.5px;background:transparent;color:var(--ash);border:0;border-bottom:2px solid transparent;
+  margin-bottom:-1px;padding:6px 0 9px;cursor:pointer}
+.inds button:hover{color:var(--ink)}
+.inds button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--signal)}
+.inds button:focus-visible{outline:1px solid var(--signal);outline-offset:2px}
+.panel[hidden]{display:none}
+.industry{margin:0 0 16px;font-size:13px;color:var(--ash);max-width:72ch}
+
 /* filter chips: pick a regulation, the matrix shows what it touches */
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
 .chips button{font:inherit;font-size:12.5px;background:transparent;color:var(--ink);border:1px solid var(--rule);
@@ -52,10 +62,11 @@ h2{font-weight:400;font-size:clamp(17px,2.2vw,21px);margin:0 0 8px}
 .about b{font-weight:400;color:var(--ink)}
 
 .matrix{width:100%;border-collapse:collapse;font-size:13.5px}
-.matrix th{font-weight:400;font-size:11.5px;color:var(--ash);text-align:center;padding:0 4px 12px;width:84px;
+.matrix th{font-weight:400;font-size:11.5px;color:var(--ash);text-align:center;padding:0 4px 12px;width:78px;
   line-height:1.35;vertical-align:bottom}
 .matrix th:first-child{text-align:left;padding-left:0;width:auto}
 .matrix th.active{color:var(--signal)}
+.matrix th .w{white-space:nowrap}
 .matrix td{border-top:1px solid var(--rule);padding:14px 4px;text-align:center;vertical-align:top}
 .matrix td:first-child{text-align:left;padding-left:0}
 .matrix td.active{background:rgba(214,69,49,.06)}

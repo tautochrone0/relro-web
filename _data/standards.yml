@@ -1,40 +1,172 @@
-# Columns of the capability matrix.
+# Columns of the capability matrix. Which industry shows which column is set in industries.yml.
 # key:   used in capabilities.yml and in links such as /?std=cra
 # name:  column header and filter button
 # short: label on phones
 # about: one line shown when the filter is active
-- key: cra
-  name: Cyber Resilience Act
-  short: CRA
-  about: >-
-    EU rules for every product with digital elements: secure by default, protected updates,
-    vulnerability handling for the product's whole life.
-- key: mr
-  name: Machinery Regulation
-  short: Machinery Reg.
-  about: >-
-    Regulation (EU) 2023/1230. Machines must be protected against corruption of their software,
-    and interventions must leave evidence. Applies from 20 January 2027.
-- key: ai
-  name: AI Act
-  short: AI Act
-  about: >-
-    AI used as a safety component of a machine can count as high-risk: robustness, accuracy and
-    cybersecurity must be demonstrated.
+
+# Automotive
 - key: "21434"
   name: ISO/SAE 21434
   short: ISO 21434
   about: >-
     The automotive cybersecurity engineering standard. The method we bring from cars to machines.
 - key: r155
-  name: UN R155 / R156
-  short: R155/R156
+  name: UN R155
+  short: R155
   about: >-
-    UN vehicle regulations for a cybersecurity management system and for software updates.
-    Required for vehicle type approval.
+    UN vehicle regulation for a cybersecurity management system (CSMS). Required for vehicle type
+    approval in the EU.
+- key: r156
+  name: UN R156
+  short: R156
+  about: >-
+    UN vehicle regulation for a software update management system (SUMS). Required for type approval
+    of vehicles that receive software updates.
+- key: aspice
+  name: ASPICE for Cybersecurity
+  short: ASPICE CS
+  about: >-
+    The Automotive SPICE extension that rates a supplier's cybersecurity processes. OEMs often require a
+    capability level before they award work.
+- key: iso26262
+  name: ISO 26262
+  short: ISO 26262
+  about: >-
+    Functional safety for road vehicles. Security and safety analyses have to agree, and coding rules
+    such as MISRA come from here.
+
+# Robotics & machinery
+- key: mr
+  name: Machinery Regulation
+  short: Machinery Reg.
+  about: >-
+    Regulation (EU) 2023/1230. Machines must be protected against corruption of their software,
+    and interventions must leave evidence. Applies from 20 January 2027.
+- key: cra
+  name: Cyber Resilience Act
+  short: CRA
+  about: >-
+    EU rules for every product with digital elements: secure by default, protected updates,
+    vulnerability handling for the product's whole life.
+- key: ai
+  name: AI Act
+  short: AI Act
+  about: >-
+    AI used as a safety component of a machine can count as high-risk: robustness, accuracy and
+    cybersecurity must be demonstrated.
 - key: "62443"
   name: IEC 62443
   short: IEC 62443
   about: >-
-    The industrial automation security standard, often used to show how machinery and its
-    components are secured.
+    The industrial automation security standard, used to show how machinery, ground stations and
+    control systems are secured.
+
+# Defense
+- key: cmmc
+  name: CMMC 2.0
+  short: CMMC
+  about: >-
+    The US Department of Defense certification for contractors. The level depends on the data you
+    handle; Level 2, the most common, usually needs a third-party assessment.
+- key: dfars
+  name: DFARS 252.204-7012
+  short: DFARS
+  about: >-
+    The contract clause that makes defense contractors protect covered defense information with
+    NIST SP 800-171 and report cyber incidents within 72 hours.
+- key: nist171
+  name: NIST SP 800-171
+  short: SP 800-171
+  about: >-
+    Security requirements for Controlled Unclassified Information in non-federal systems. The basis
+    of CMMC Level 2.
+- key: nist53
+  name: NIST SP 800-53
+  short: SP 800-53
+  about: >-
+    The catalogue of security and privacy controls for federal information systems, often passed on
+    to suppliers as requirements.
+
+# Medical & healthcare
+- key: mdr
+  name: EU MDR 2017/745
+  short: MDR
+  about: >-
+    Medical devices with software must be designed for security across their lifecycle and protected
+    against unauthorised access. Required for the CE mark.
+- key: iso14971
+  name: ISO 14971
+  short: ISO 14971
+  about: >-
+    Risk management for medical devices. Security risks that can harm a patient are handled in the
+    same process as safety risks.
+- key: hipaa
+  name: HIPAA
+  short: HIPAA
+  about: >-
+    US rules for electronic protected health information: risk analysis, access control, audit
+    controls, integrity and transmission security.
+- key: gdpr
+  name: GDPR
+  short: GDPR
+  about: >-
+    Health data is a special category of personal data. It needs appropriate technical measures,
+    and breaches must be notified within 72 hours.
+- key: hitrust
+  name: HITRUST CSF
+  short: HITRUST
+  about: >-
+    A certifiable framework built for healthcare, with e1, i1 and r2 levels. Large US health
+    providers often ask their suppliers for it.
+- key: nistcsf
+  name: NIST CSF 2.0
+  short: NIST CSF
+  about: >-
+    Govern, identify, protect, detect, respond, recover. A common way to show how mature a security
+    programme is.
+
+# Aerospace
+- key: do326
+  name: DO-326A / DO-356A
+  short: DO-326A
+  about: >-
+    The airworthiness security process and methods (with DO-355A for continued airworthiness).
+    Accepted means of compliance for aircraft certification by EASA and the FAA.
+- key: partis
+  name: EASA Part-IS
+  short: Part-IS
+  about: >-
+    Information security management for aviation organisations: risk assessment, detection, response
+    and reporting. Applies in stages from October 2025 and February 2026.
+- key: ecss
+  name: ECSS-E-ST-80C
+  short: ECSS-80C
+  about: >-
+    The European space standard for security in space systems engineering, from design and production
+    to operation and decommissioning.
+- key: bsi
+  name: BSI TR-03184
+  short: BSI TR-03184
+  about: >-
+    The German technical guideline for satellite security: lifecycle risk management and protective
+    measures for the space and ground segments.
+- key: do178
+  name: DO-178C
+  short: DO-178C
+  about: >-
+    Software assurance for airborne systems: coding standards, reviews and verification evidence,
+    scaled to the design assurance level.
+
+# Across industries
+- key: iso27001
+  name: ISO/IEC 27001
+  short: ISO 27001
+  about: >-
+    The certifiable information security management system. Defense, healthcare and aerospace
+    customers ask for it alike.
+- key: nis2
+  name: NIS2 Directive
+  short: NIS2
+  about: >-
+    EU directive for essential and important entities, including health, space and air transport:
+    risk management, supply-chain security and incident reporting.

@@ -1,9 +1,10 @@
 # Rows of the capability matrix.
-# standards: keys from standards.yml this capability helps with
+# standards: keys from standards.yml this capability helps with.
+#            A row shows under an industry only if it answers at least one of that industry's standards.
 # phases:    which of assess / design / build / operate we deliver it in
 - name: Threat analysis & risk assessment
   summary: Assets, threats and attack paths, turned into concrete requirements.
-  standards: [cra, mr, ai, "21434", r155, "62443"]
+  standards: [cra, mr, ai, "21434", r155, aspice, iso26262, "62443", cmmc, dfars, nist171, nist53, iso27001, mdr, iso14971, hipaa, gdpr, hitrust, nistcsf, nis2, do326, partis, ecss, bsi]
   phases: [assess, design]
   deliverables:
     - Asset and attack-path model of your machine
@@ -12,7 +13,7 @@
 
 - name: Secure boot & firmware integrity
   summary: A chain of trust from ROM to application. Signed images, locked debug ports.
-  standards: [cra, mr, "21434", "62443"]
+  standards: [cra, mr, "21434", r155, "62443", nist53, mdr, do326, ecss, bsi]
   phases: [design, build]
   deliverables:
     - Boot chain design for your SoC
@@ -21,7 +22,7 @@
 
 - name: Signing infrastructure
   summary: HSM-backed signing and key management, wired into your CI.
-  standards: [cra, r155, "62443"]
+  standards: [cra, r155, r156, "62443", cmmc, dfars, nist171, nist53, iso27001, do326, ecss, bsi]
   phases: [design, build, operate]
   deliverables:
     - Key hierarchy and key ceremony
@@ -30,7 +31,7 @@
 
 - name: Secure over-the-air updates
   summary: Signed, fail-safe updates with rollback and an audit trail.
-  standards: [cra, mr, r155]
+  standards: [cra, mr, "21434", r155, r156, nist53, mdr, do326, ecss, bsi]
   phases: [design, build, operate]
   deliverables:
     - Update architecture and failure analysis
@@ -39,7 +40,7 @@
 
 - name: Embedded Linux hardening
   summary: Yocto with dm-verity, AppArmor, LoadPin and minimal images.
-  standards: [cra, "62443"]
+  standards: [cra, "21434", "62443", cmmc, dfars, nist171, nist53, mdr, ecss, bsi]
   phases: [assess, design, build]
   deliverables:
     - Hardening review of your current image
@@ -48,12 +49,21 @@
 
 - name: Intrusion detection & logging
   summary: On-device detection and tamper-evident records of every intervention.
-  standards: [cra, mr, r155, "62443"]
+  standards: [cra, mr, r155, "62443", cmmc, dfars, nist171, nist53, iso27001, hipaa, hitrust, nistcsf, nis2, partis, ecss, bsi]
   phases: [design, build, operate]
   deliverables:
     - Detection rules for your machine and network
     - Tamper-evident security log
     - Alert path to your fleet backend
+
+- name: Data protection on the device
+  summary: Encryption at rest and in transit, access control for personal and health data.
+  standards: [cra, gdpr, hipaa, hitrust, iso27001, cmmc, dfars, nist171, nist53, mdr]
+  phases: [design, build]
+  deliverables:
+    - Map of the sensitive data your device stores and sends
+    - Encrypted storage and mutual TLS, with keys held in hardware
+    - Access control and audit trail for that data
 
 - name: AI model integrity
   summary: Signed models, secure model updates, protected weights on the device.
@@ -66,7 +76,7 @@
 
 - name: Vulnerability monitoring & SBOM
   summary: Continuous CVE triage against your build, for the life of the product.
-  standards: [cra, r155, "62443"]
+  standards: [cra, "21434", r155, "62443", cmmc, dfars, nist171, nist53, iso27001, mdr, hitrust, nistcsf, nis2, do326, partis, ecss, bsi]
   phases: [assess, operate]
   deliverables:
     - SBOM generated from your real build
@@ -75,9 +85,18 @@
 
 - name: Code review & static analysis
   summary: MISRA and security review, AI-assisted and engineer-verified.
-  standards: ["21434", "62443"]
+  standards: ["21434", aspice, iso26262, "62443", nist53, mdr, do178]
   phases: [assess, build]
   deliverables:
     - Static analysis set-up for your codebase
     - Security review of critical components
     - Findings verified and ranked by an engineer
+
+- name: Security management & audit readiness
+  summary: The processes, records and evidence an auditor or approval authority will ask for.
+  standards: [cra, mr, ai, "21434", r155, r156, aspice, "62443", cmmc, dfars, nist171, nist53, iso27001, mdr, hipaa, gdpr, hitrust, nistcsf, nis2, do326, partis, ecss]
+  phases: [assess, design, operate]
+  deliverables:
+    - Gap review against the standards you will be audited to
+    - Security processes that fit how your team already works
+    - Evidence pack for certification, type approval or the technical file

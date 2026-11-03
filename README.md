@@ -6,9 +6,10 @@ Jekyll сайт за RELRO, готов за GitHub Pages.
 
 | Файл | Какво съдържа |
 | --- | --- |
-| `_config.yml` | Имейл, локация, домейн, дата за брояча, `noindex` |
+| `_config.yml` | Имейл, локация, домейн, дата за брояча, `noindex`, индустрията, с която се отваря матрицата |
+| `_data/industries.yml` | Табовете на матрицата: индустрия, кратко описание и кои стандарти са нейни колони |
 | `_data/capabilities.yml` | Редовете на матрицата: услуга, описание, регулации, етапи, какво получава клиентът |
-| `_data/standards.yml` | Колоните: регулации и стандарти, с кратко обяснение за филтъра |
+| `_data/standards.yml` | Регулации и стандарти, с кратко обяснение за филтъра |
 | `_data/engagements.yml` | „Ways to work with us“ |
 | `_data/record.yml` | „Done before“ |
 | `index.html` | Началната страница (Liquid шаблон) |
@@ -19,9 +20,11 @@ Jekyll сайт за RELRO, готов за GitHub Pages.
 | `CNAME` | Домейнът: `relro.site` |
 
 Текстовете се сменят в `_data/*.yml`, без да се пипа HTML.
-Нова регулация: добави я в `standards.yml` и сложи ключа ѝ в `standards:` на услугите в `capabilities.yml`.
+Нова регулация: добави я в `standards.yml`, сложи ключа ѝ в `standards:` на индустриите в `industries.yml`, където трябва да е колона, и в `standards:` на услугите в `capabilities.yml`.
+Една регулация може да е колона в няколко индустрии (например ISO/IEC 27001). Услуга се показва в индустрия само ако покрива поне един от нейните стандарти.
 
-Линк с готов филтър: `https://relro.site/?std=cra` (ключовете са в `standards.yml`).
+Линк с готов филтър: `https://relro.site/?ind=medical&std=hipaa` (ключовете са в `industries.yml` и `standards.yml`).
+`https://relro.site/?std=cra` без `ind` отваря първата индустрия, в която има такава колона.
 
 ## Качване в GitHub
 

@@ -24,49 +24,66 @@ layout: default
   <section>
     <p class="label">Capability matrix</p>
     <h2>What we build, mapped to what you will be asked for.</h2>
-    <p class="sub">Pick a regulation or standard to see the capabilities that answer it. Open any row to see what you get.</p>
+    <p class="sub">Pick your industry, then a regulation or standard to see the capabilities that answer it. Open any row to see what you get.</p>
 
-    <div class="chips" id="chips">
-      <button type="button" aria-pressed="true" data-k="">All</button>
-      {% for s in site.data.standards %}<button type="button" aria-pressed="false" data-k="{{ s.key }}" data-about="{{ s.about | strip | escape }}">{{ s.name }}</button>
+    <div class="inds" id="inds">
+      {% for ind in site.data.industries %}<button type="button" aria-pressed="{% if ind.key == site.default_industry %}true{% else %}false{% endif %}" aria-controls="ind-{{ ind.key }}" data-ind="{{ ind.key }}">{{ ind.name }}</button>
       {% endfor %}
     </div>
-    <p class="about" id="about" data-total="{{ site.data.capabilities.size }}">All {{ site.data.capabilities.size }} capabilities. Choose a regulation above to narrow them down.</p>
 
-    <table class="matrix" id="matrix">
-      <thead>
-        <tr><th>Capability</th>{% for s in site.data.standards %}<th data-k="{{ s.key }}">{{ s.name }}</th>{% endfor %}</tr>
-      </thead>
-      <tbody>
-      {% for c in site.data.capabilities %}{% assign i = forloop.index0 %}
-        <tr class="row{% if forloop.first %} open{% endif %}" data-std="{{ c.standards | join: ' ' }}">
-          <td>
-            <button type="button" class="toggle" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="det{{ i }}">
-              <span class="cap">{{ c.name | escape }}</span><span class="desc">{{ c.summary | escape }}</span>
-            </button>
-          </td>
-          {% for s in site.data.standards %}{% if c.standards contains s.key %}
-          <td class="std on" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot on" aria-label="{{ s.name }}: yes"></i></td>{% else %}
-          <td class="std off" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot off" aria-label="{{ s.name }}: no"></i></td>{% endif %}{% endfor %}
-        </tr>
-        <tr class="detail" id="det{{ i }}" data-std="{{ c.standards | join: ' ' }}"{% unless forloop.first %} hidden{% endunless %}>
-          <td colspan="{{ site.data.standards.size | plus: 1 }}">
-            <div class="grid">
-              <div>
-                <h4>What you get</h4>
-                <ul>{% for d in c.deliverables %}<li>{{ d | escape }}</li>{% endfor %}</ul>
-                <a class="ask" href="mailto:{{ site.email }}?subject={{ c.name | url_encode | replace: '+', '%20' }}">Ask about this &rarr;</a>
+    {% for ind in site.data.industries %}
+    {% comment %} An industry lists only the capabilities that answer at least one of its standards. {% endcomment %}
+    {% assign total = 0 %}{% for c in site.data.capabilities %}{% assign hit = false %}{% for k in ind.standards %}{% if c.standards contains k %}{% assign hit = true %}{% endif %}{% endfor %}{% if hit %}{% assign total = total | plus: 1 %}{% endif %}{% endfor %}
+    <div class="panel" id="ind-{{ ind.key }}" data-ind="{{ ind.key }}" data-name="{{ ind.name | escape }}"{% unless ind.key == site.default_industry %} hidden{% endunless %}>
+      <p class="industry">{{ ind.about | strip }}</p>
+
+      <div class="chips">
+        <button type="button" aria-pressed="true" data-k="">All</button>
+        {% for k in ind.standards %}{% assign s = site.data.standards | where: "key", k | first %}<button type="button" aria-pressed="false" data-k="{{ s.key }}" data-about="{{ s.about | strip | escape }}">{{ s.name }}</button>
+        {% endfor %}
+      </div>
+      <p class="about" data-total="{{ total }}">All {{ total }} capabilities for {{ ind.name | downcase | escape }}. Choose a regulation above to narrow them down.</p>
+
+      <table class="matrix">
+        <thead>
+          {% comment %} Past six columns the full names no longer fit, so the headers use the short labels. {% endcomment %}
+          <tr><th>Capability</th>{% for k in ind.standards %}{% assign s = site.data.standards | where: "key", k | first %}{% if ind.standards.size > 6 %}<th data-k="{{ s.key }}" title="{{ s.name | escape }}"><span class="w">{{ s.short | escape | split: ' ' | join: '</span> <span class="w">' }}</span></th>{% else %}<th data-k="{{ s.key }}">{{ s.name }}</th>{% endif %}{% endfor %}</tr>
+        </thead>
+        <tbody>
+        {% assign n = 0 %}
+        {% for c in site.data.capabilities %}{% assign hit = false %}{% for k in ind.standards %}{% if c.standards contains k %}{% assign hit = true %}{% endif %}{% endfor %}{% if hit %}
+          {% assign i = ind.key | append: '-' | append: forloop.index0 %}
+          <tr class="row{% if n == 0 %} open{% endif %}" data-std="{{ c.standards | join: ' ' }}">
+            <td>
+              <button type="button" class="toggle" aria-expanded="{% if n == 0 %}true{% else %}false{% endif %}" aria-controls="det-{{ i }}">
+                <span class="cap">{{ c.name | escape }}</span><span class="desc">{{ c.summary | escape }}</span>
+              </button>
+            </td>
+            {% for k in ind.standards %}{% assign s = site.data.standards | where: "key", k | first %}{% if c.standards contains s.key %}
+            <td class="std on" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot on" aria-label="{{ s.name }}: yes"></i></td>{% else %}
+            <td class="std off" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot off" aria-label="{{ s.name }}: no"></i></td>{% endif %}{% endfor %}
+          </tr>
+          <tr class="detail" id="det-{{ i }}" data-std="{{ c.standards | join: ' ' }}"{% unless n == 0 %} hidden{% endunless %}>
+            <td colspan="{{ ind.standards.size | plus: 1 }}">
+              <div class="grid">
+                <div>
+                  <h4>What you get</h4>
+                  <ul>{% for d in c.deliverables %}<li>{{ d | escape }}</li>{% endfor %}</ul>
+                  <a class="ask" href="mailto:{{ site.email }}?subject={{ c.name | url_encode | replace: '+', '%20' }}">Ask about this &rarr;</a>
+                </div>
+                <div>
+                  <h4>When in the product's life</h4>
+                  <div class="phase">{% for p in phases %}<span{% if c.phases contains p %} class="on"{% endif %}>{{ p | capitalize }}</span>{% endfor %}</div>
+                </div>
               </div>
-              <div>
-                <h4>When in the product's life</h4>
-                <div class="phase">{% for p in phases %}<span{% if c.phases contains p %} class="on"{% endif %}>{{ p | capitalize }}</span>{% endfor %}</div>
-              </div>
-            </div>
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+            </td>
+          </tr>
+          {% assign n = n | plus: 1 %}
+        {% endif %}{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endfor %}
     <p class="note">Indicative mapping to guide a first conversation. Not legal advice.</p>
   </section>
 
