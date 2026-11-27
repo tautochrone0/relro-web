@@ -11,19 +11,6 @@
   power: 0.3
   flow: 0.3
 
-- n: Power on
-  t: Power on
-  p: Rails come up in sequence and reset releases only when every voltage is stable. Brown-out and glitch detectors watch from the first microsecond, because a well-timed glitch is the cheapest way past a security check.
-  cap: Secure boot & firmware integrity
-  cam: [0.4, 5.4, 8.6, 0, 0, -0.4]
-  routes: [r1]
-  hot: [pmic]
-  power: 1
-  flow: 1
-  labels:
-    - [pmic, Power rails up, 0, 0, 0]
-    - [soc, Reset released, 0, 0, 0]
-
 - n: Root of trust
   t: Root of trust in silicon
   p: The first instruction runs from boot ROM, burned into the chip. It reads the hash of your public key from one-time-programmable fuses. Nothing written later can change either.

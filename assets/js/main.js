@@ -1,7 +1,7 @@
 /* ---------- content ---------- */
 const scenes=JSON.parse(document.getElementById('scene-data').textContent);
 const N=scenes.length-1,IX=f=>scenes.findIndex(s=>s[f]),S_SIG=IX('sig'),S_DBG=IX('dbg'),S_STACK=IX('stack'),S_SAND=IX('sand'),S_AGENT=IX('agent'),S_SHIELD=IX('shield'),S_OTA=IX('ota'),S_TEE=IX('tee');
-{const CLOSE={stack:.82,shield:.82,agent:.8,ota:.8,sand:.78};scenes.forEach((sc,k)=>{if(!k)return;const f=Object.keys(CLOSE).find(x=>sc[x]);const m=f?CLOSE[f]:(k===1?.85:.72),c=sc.cam;for(let q=0;q<3;q++)c[q]=c[q+3]+(c[q]-c[q+3])*m})}
+{const CLOSE={stack:.82,shield:.82,agent:.8,ota:.8,sand:.78};scenes.forEach((sc,k)=>{if(!k)return;const f=Object.keys(CLOSE).find(x=>sc[x]);const m=f?CLOSE[f]:.72,c=sc.cam;for(let q=0;q<3;q++)c[q]=c[q+3]+(c[q]-c[q+3])*m})}
 
 
 const $=id=>document.getElementById(id);
