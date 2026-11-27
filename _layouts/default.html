@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.lang | default: 'en' }}">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
 <meta name="description" content="{{ page.description | default: site.description | strip }}">
 {% if site.noindex %}<meta name="robots" content="noindex">{% endif %}
@@ -12,18 +12,29 @@
 <meta property="og:url" content="{{ page.url | absolute_url }}">
 <meta property="og:type" content="website">
 <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 {% comment %} ?v= changes on every build, so browsers fetch fresh CSS and JS instead of a cached copy. {% endcomment %}
 {% assign v = site.time | date: '%s' %}
-<link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}?v={{ v }}">
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ v }}">
 </head>
 <body>
+{% if page.story %}
+<div id="loader" role="status" aria-live="polite">{% include logo.svg class="ld-logo" %}<div class="ld-bar" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100"><i id="ldbar"></i></div></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="labels" aria-hidden="true"></div>
+<div id="vig" aria-hidden="true"></div>
+{% endif %}
 
-{% if site.background_animation %}<canvas id="field" aria-hidden="true"></canvas>
-<div class="veil" aria-hidden="true"></div>{% endif %}
+{% include header.html %}
 
 {{ content }}
 
-{% if site.background_animation %}<script src="{{ '/assets/js/field.js' | relative_url }}?v={{ v }}" defer></script>{% endif %}
-<script src="{{ '/assets/js/site.js' | relative_url }}?v={{ v }}" defer></script>
+{% if page.story %}
+<script type="application/json" id="scene-data">{{ site.data.scenes | jsonify }}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@{{ site.three_version }}/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@{{ site.three_version }}/examples/jsm/"}}</script>
+<script type="module" src="{{ '/assets/js/main.js' | relative_url }}?v={{ v }}"></script>
+{% endif %}
 </body>
 </html>

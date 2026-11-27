@@ -1,0 +1,12 @@
+- what: "Secure boot, cross-core integrity, debug lock-down and production signing"
+  where: "Instrument cluster · European premium automaker"
+- what: "Kernel security architecture: dm-verity, AppArmor, LoadPin, cgroups"
+  where: Driver monitoring platform
+- what: Over-the-air update architecture and technical roadmap
+  where: Automotive software platform
+- what: Intrusion detection module to AUTOSAR specification
+  where: "Zone ECU · Japanese automaker"
+- what: Firmware security and cryptographic drivers
+  where: Vehicle-to-home charging station
+- what: Encrypted update path and hardware crypto enablement
+  where: Infotainment head unit

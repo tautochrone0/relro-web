@@ -1,24 +1,28 @@
 title: RELRO Security
-tagline: Automotive-grade security for autonomous machines.
-description: >-
-  Automotive-grade security for robots and autonomous machines.
-  Sofia, working across the EU.
+brand: RELRO
+brand_sub: SECURITY
+tagline: We prepare for the day the machines stop taking instructions.
+description: Automotive-grade security for robots and autonomous machines.
 email: contact@relro.site
-location: Sofia · working across the EU
-url: https://relro.site
-baseurl: ""
-
-# Date Regulation (EU) 2023/1230 applies; drives the countdown in the hero.
-machinery_regulation_date: "2027-01-20T00:00:00Z"
-
-# Background animation (the hash tree behind the page). true shows it, false leaves a plain background.
-background_animation: false
-
-# Industry tab the capability matrix opens on (a key from _data/industries.yml).
-default_industry: robotics
+location: Sofia, EU
+lang: en
 
 # Set to true while the site is not ready for search engines.
 noindex: false
+
+# Set baseurl to "/repo-name" if served from a GitHub Pages project subpath.
+url: https://relro.site
+baseurl: ""
+
+three_version: 0.160.0
+
+nav:
+  - title: Capabilities
+    url: "#capabilities"
+  - title: Work with us
+    url: "#work-with-us"
+  - title: Done before
+    url: "#done-before"
 
 exclude:
   - README.md

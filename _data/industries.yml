@@ -1,39 +1,20 @@
-# Tabs of the capability matrix, one per industry.
-# key:       used in links such as /?ind=medical
-# name:      tab label
-# about:     one line under the tabs
-# standards: keys from standards.yml, in column order. A standard can sit under several industries.
-- key: automotive
-  name: Automotive
-  about: >-
-    Road vehicles and their suppliers. Type approval asks for a cybersecurity and a software update
-    management system; OEMs ask suppliers for ISO/SAE 21434 work products.
-  standards: ["21434", r155, r156, aspice, iso26262]
+# Capability matrix tabs. `caps` lists ids from capabilities.yml.
+- name: Robotics & machinery
+  regs: [Machinery Regulation, Cyber Resilience Act, AI Act, IEC 62443]
+  caps: [tara, secure-boot, signing, ota, linux, ids, data, ai, vuln, review, audit]
 
-- key: robotics
-  name: Robotics & machinery
-  about: >-
-    Robots, autonomous machines and the software that runs them. EU rules for machinery, connected
-    products and AI all land on the same device.
-  standards: [mr, cra, ai, "62443"]
+- name: Automotive
+  regs: [ISO/SAE 21434, UN R155, UN R156, ASPICE for Cybersecurity, ISO 26262]
+  caps: [tara, secure-boot, signing, ota, linux, ids, vuln, review, audit]
 
-- key: defense
-  name: Defense
-  about: >-
-    Contractors and subcontractors in the defense supply chain that handle Federal Contract
-    Information or Controlled Unclassified Information.
-  standards: [cmmc, dfars, nist171, nist53, iso27001]
+- name: Defense
+  regs: [CMMC 2.0, DFARS 252.204-7012, NIST SP 800-171, NIST SP 800-53, ISO/IEC 27001]
+  caps: [tara, secure-boot, signing, ota, linux, ids, data, vuln, review, audit]
 
-- key: medical
-  name: Medical & healthcare
-  about: >-
-    Medical devices and the systems around them. Device law asks for security by design; health data
-    law asks for protection of every patient record the device touches.
-  standards: [mdr, iso14971, hipaa, gdpr, hitrust, nistcsf, iso27001, nis2]
+- name: Medical & healthcare
+  regs: [MDR, ISO 14971, HIPAA, GDPR, HITRUST, NIST CSF, ISO 27001, NIS2]
+  caps: [tara, secure-boot, signing, ota, linux, ids, data, vuln, review, audit]
 
-- key: aerospace
-  name: Aerospace
-  about: >-
-    Aircraft systems, satellites, drones and their ground segment. Airworthiness and space standards
-    treat security as part of certification, from design to decommissioning.
-  standards: [do326, partis, ecss, bsi, do178, "62443", iso27001, nis2]
+- name: Aerospace
+  regs: [DO-326A, Part-IS, ECSS-80C, BSI TR-03184, DO-178C, IEC 62443, ISO 27001, NIS2]
+  caps: [tara, secure-boot, signing, ota, linux, ids, data, vuln, review, audit]

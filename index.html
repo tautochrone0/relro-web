@@ -1,124 +1,90 @@
 ---
 layout: default
+story: true
 ---
-{% assign phases = "assess,design,build,operate" | split: "," %}
-<header>
-  <div class="wrap">
-    <div class="top">
-      {% include crest.html %}
-      <a href="mailto:{{ site.email }}?subject=Make%20contact">{{ site.email }}</a>
-    </div>
-    <div class="hero">
-      <h1>We prepare for the day the machines stop taking instructions.<span class="cursor"></span></h1>
-      <p class="lede">Automotive-grade security for robots and autonomous machines. <b>For the past decade, we secured cars for some of the world's largest automakers. Now we secure what comes next.</b></p>
-      <div class="strip">
-        <span>days until the EU Machinery Regulation applies &nbsp;<b id="d" data-date="{{ site.machinery_regulation_date }}">—</b></span>
-        <span>Cyber Resilience Act &nbsp;<b>phasing in</b></span>
-      </div>
-    </div>
-  </div>
-</header>
+<nav class="rail" id="rail" aria-label="Chain of trust steps">
+{%- for s in site.data.scenes offset:1 -%}
+  {%- assign num = forloop.index | plus: 1 -%}
+  <button data-k="{{ forloop.index }}" aria-label="{% if num < 10 %}0{% endif %}{{ num }} {{ s.n | escape }}"></button>
+{%- endfor -%}
+</nav>
 
-<main class="wrap">
-
-  <section>
-    <p class="label">Capability matrix</p>
-    <h2>What we build, mapped to what you will be asked for.</h2>
-    <p class="sub">Pick your industry, then a regulation or standard to see the capabilities that answer it. Open any row to see what you get.</p>
-
-    <div class="inds" id="inds">
-      {% for ind in site.data.industries %}<button type="button" aria-pressed="{% if ind.key == site.default_industry %}true{% else %}false{% endif %}" aria-controls="ind-{{ ind.key }}" data-ind="{{ ind.key }}">{{ ind.name }}</button>
-      {% endfor %}
-    </div>
-
-    {% for ind in site.data.industries %}
-    {% comment %} An industry lists only the capabilities that answer at least one of its standards. {% endcomment %}
-    {% assign total = 0 %}{% for c in site.data.capabilities %}{% assign hit = false %}{% for k in ind.standards %}{% if c.standards contains k %}{% assign hit = true %}{% endif %}{% endfor %}{% if hit %}{% assign total = total | plus: 1 %}{% endif %}{% endfor %}
-    <div class="panel" id="ind-{{ ind.key }}" data-ind="{{ ind.key }}" data-name="{{ ind.name | escape }}"{% unless ind.key == site.default_industry %} hidden{% endunless %}>
-      <p class="industry">{{ ind.about | strip }}</p>
-
-      <div class="chips">
-        <button type="button" aria-pressed="true" data-k="">All</button>
-        {% for k in ind.standards %}{% assign s = site.data.standards | where: "key", k | first %}<button type="button" aria-pressed="false" data-k="{{ s.key }}" data-about="{{ s.about | strip | escape }}">{{ s.name }}</button>
-        {% endfor %}
-      </div>
-      <p class="about" data-total="{{ total }}">All {{ total }} capabilities for {{ ind.name | downcase | escape }}. Choose a regulation above to narrow them down.</p>
-
-      <table class="matrix">
-        <thead>
-          {% comment %} Past six columns the full names no longer fit, so the headers use the short labels. {% endcomment %}
-          <tr><th>Capability</th>{% for k in ind.standards %}{% assign s = site.data.standards | where: "key", k | first %}{% if ind.standards.size > 6 %}<th data-k="{{ s.key }}" title="{{ s.name | escape }}"><span class="w">{{ s.short | escape | split: ' ' | join: '</span> <span class="w">' }}</span></th>{% else %}<th data-k="{{ s.key }}">{{ s.name }}</th>{% endif %}{% endfor %}</tr>
-        </thead>
-        <tbody>
-        {% assign n = 0 %}
-        {% for c in site.data.capabilities %}{% assign hit = false %}{% for k in ind.standards %}{% if c.standards contains k %}{% assign hit = true %}{% endif %}{% endfor %}{% if hit %}
-          {% assign i = ind.key | append: '-' | append: forloop.index0 %}
-          <tr class="row{% if n == 0 %} open{% endif %}" data-std="{{ c.standards | join: ' ' }}">
-            <td>
-              <button type="button" class="toggle" aria-expanded="{% if n == 0 %}true{% else %}false{% endif %}" aria-controls="det-{{ i }}">
-                <span class="cap">{{ c.name | escape }}</span><span class="desc">{{ c.summary | escape }}</span>
-              </button>
-            </td>
-            {% for k in ind.standards %}{% assign s = site.data.standards | where: "key", k | first %}{% if c.standards contains s.key %}
-            <td class="std on" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot on" aria-label="{{ s.name }}: yes"></i></td>{% else %}
-            <td class="std off" data-k="{{ s.key }}" data-short="{{ s.short }}"><i class="dot off" aria-label="{{ s.name }}: no"></i></td>{% endif %}{% endfor %}
-          </tr>
-          <tr class="detail" id="det-{{ i }}" data-std="{{ c.standards | join: ' ' }}"{% unless n == 0 %} hidden{% endunless %}>
-            <td colspan="{{ ind.standards.size | plus: 1 }}">
-              <div class="grid">
-                <div>
-                  <h4>What you get</h4>
-                  <ul>{% for d in c.deliverables %}<li>{{ d | escape }}</li>{% endfor %}</ul>
-                  <a class="ask" href="mailto:{{ site.email }}?subject={{ c.name | url_encode | replace: '+', '%20' }}">Ask about this &rarr;</a>
-                </div>
-                <div>
-                  <h4>When in the product's life</h4>
-                  <div class="phase">{% for p in phases %}<span{% if c.phases contains p %} class="on"{% endif %}>{{ p | capitalize }}</span>{% endfor %}</div>
-                </div>
-              </div>
-            </td>
-          </tr>
-          {% assign n = n | plus: 1 %}
-        {% endif %}{% endfor %}
-        </tbody>
-      </table>
-    </div>
-    {% endfor %}
-    <p class="note">Indicative mapping to guide a first conversation. Not legal advice.</p>
-  </section>
-
-  <section>
-    <p class="label">Ways to work with us</p>
-    <h2>Start small. Stay as long as the machine does.</h2>
-    <p class="sub">Most clients start with an assessment and decide the rest from there.</p>
-    <div class="engage">
-      {% for e in site.data.engagements %}<div><span class="ph">{{ e.phase }}</span><h3>{{ e.title }}</h3><p>{{ e.text }}</p><span class="t">{{ e.term }}</span></div>
-      {% endfor %}
+<main>
+<div class="story" id="top">
+  <section class="scene hero" data-s="0">
+    <div class="in-hero">
+      <h1>{{ site.tagline }}</h1>
+      <p class="sub">{{ site.description }}</p>
+      <div class="scrollcue">Scroll to follow the chain of trust, from ROM to the field</div>
     </div>
   </section>
-
-  <section>
-    <p class="label">Done before</p>
-    <h2>The same work, on machines that already carry people.</h2>
-    <ul class="record">
-      {% for r in site.data.record %}<li><span>{{ r.work }}</span><span>{{ r.context }}</span></li>
-      {% endfor %}
-    </ul>
-    <p class="fine">Delivered by our engineers in previous roles at tier-one automotive suppliers.</p>
-  </section>
-
-  <section>
-    <p class="label">How we work</p>
-    <div class="cols">
-      <div><h3>AI-accelerated</h3><p>Threat analysis, code review and vulnerability triage in days, not months.</p></div>
-      <div><h3>Engineer-verified</h3><p>Every finding and every line we ship is reviewed and signed off by an engineer.</p></div>
-      <div><h3>Your code stays yours</h3><p>Our tooling can run on your premises. Nothing leaves without your say.</p></div>
-    </div>
-  </section>
-
-  <footer>
-    <span>{{ site.location }}</span>
-    <a class="enlist" href="mailto:{{ site.email }}?subject=Make%20contact">Make contact</a>
-  </footer>
-
+{%- for s in site.data.scenes offset:1 %}
+  {%- assign num = forloop.index | plus: 1 %}
+  <section class="scene" data-s="{{ forloop.index }}" id="step-{{ forloop.index }}"><div class="card{% if s.red %} red{% endif %}"><p class="step">{% if num < 10 %}0{% endif %}{{ num }} — {{ s.n | escape }}</p><h2>{{ s.t | escape }}</h2><p>{{ s.p | escape }}</p><span class="cap">{{ s.cap | escape }}</span></div></section>
+{%- endfor %}
+</div>
 </main>
+
+<div class="after">
+  <section class="band" id="capabilities"><div class="wrap">
+    <p class="kicker">Capability matrix</p>
+    <h2>What we build, mapped to what you will be asked for.</h2>
+    <p class="lead">Pick an industry to see the regulations and standards you will be asked for, and the capabilities that answer them.</p>
+    <div class="tabs" role="tablist" id="tabs">
+      {%- for ind in site.data.industries -%}
+      <button role="tab" id="tab-{{ forloop.index0 }}" aria-controls="ind-{{ forloop.index0 }}" data-k="{{ forloop.index0 }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"{% unless forloop.first %} tabindex="-1"{% endunless %}>{{ ind.name | escape }}<small>{{ ind.caps.size }}</small></button>
+      {%- endfor -%}
+    </div>
+    {%- for ind in site.data.industries %}
+    <div class="ind-panel" role="tabpanel" id="ind-{{ forloop.index0 }}" aria-labelledby="tab-{{ forloop.index0 }}"{% unless forloop.first %} hidden{% endunless %}>
+      <div class="regs">{% for r in ind.regs %}<span>{{ r | escape }}</span>{% endfor %}</div>
+      <p class="mxc">{{ ind.caps.size }} capabilities for {{ ind.name | downcase | escape }}</p>
+      <ul class="mx">
+        {%- for cid in ind.caps %}
+        {%- assign cap = site.data.capabilities | where: "id", cid | first %}
+        {%- capture subject %}{{ cap.name }} · {{ ind.name }}{% endcapture %}
+        <li><b>{{ cap.name | escape }}</b><small>{{ cap.desc | escape }}</small><a href="mailto:{{ site.email }}?subject={{ subject | url_encode | replace: '+', '%20' }}">Ask about this →</a></li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endfor %}
+    <p class="fine">Indicative mapping to guide a first conversation. Not legal advice.</p>
+  </div></section>
+
+  <section class="band alt" id="work-with-us"><div class="wrap">
+    <p class="kicker">Ways to work with us</p>
+    <h2>Start small. Stay as long as the machine does.</h2>
+    <div class="svc">
+      {%- for s in site.data.services %}
+      <article><div class="stage">{% for st in s.stages %}<span>{{ st }}</span>{% endfor %}</div><h3>{{ s.title }}</h3><p>{{ s.text }}</p><div class="when">{{ s.when }}</div></article>
+      {%- endfor %}
+    </div>
+  </div></section>
+
+  <section class="band" id="done-before"><div class="wrap">
+    <p class="kicker">Done before</p>
+    <h2>The same work, on machines that already carry people.</h2>
+    <p class="lead">For the past decade we have secured cars for large automakers. This work was delivered by engineers who previously worked at tier-one automotive suppliers.</p>
+    <ul class="work">
+      {%- for w in site.data.work %}
+      <li><b>{{ w.what }}</b><span>{{ w.where }}</span></li>
+      {%- endfor %}
+    </ul>
+  </div></section>
+
+  <section class="band alt" id="how"><div class="wrap">
+    <h2>How we work</h2>
+    <div class="how">
+      {%- for h in site.data.how %}
+      <div><h3>{{ h.title }}</h3><p>{{ h.text }}</p></div>
+      {%- endfor %}
+    </div>
+  </div></section>
+
+  <section class="band" id="contact"><div class="wrap contact">
+    <div><h2>{{ site.tagline }}</h2><p class="lead">Based in Sofia, working across the EU.</p></div>
+    <div><a class="btn" href="mailto:{{ site.email }}">Make contact</a><p class="addr">{{ site.email }}</p></div>
+  </div></section>
+
+  {% include footer.html %}
+</div>

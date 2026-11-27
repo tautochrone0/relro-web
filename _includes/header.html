@@ -1,0 +1,4 @@
+<header>
+  <a class="mark" href="{% if page.story %}#top{% else %}{{ '/' | relative_url }}{% endif %}" aria-label="{{ site.title }} home">{% include logo.svg class="logo" %}<span class="wm"><b>{{ site.brand }}</b><small>{{ site.brand_sub }}</small></span></a>
+  <nav>{% for item in site.nav %}<a href="{% unless page.story %}{{ '/' | relative_url }}{% endunless %}{{ item.url }}">{{ item.title }}</a>{% endfor %}<a class="mail" href="mailto:{{ site.email }}">{{ site.email }}</a></nav>
+</header>
