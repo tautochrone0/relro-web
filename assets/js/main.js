@@ -127,7 +127,7 @@ holes.push([-7.4,-4.4],[7.4,-4.4],[-7.4,4.4],[7.4,4.4]);
 pads.push({x:-1.2,z:-4.5,w:.12,d:.12,round:1},{x:1.2,z:4.55,w:.12,d:.12,round:1},{x:-6.5,z:3.5,w:1.55,d:.55,hdr:1},{x:7.6,z:3.8,w:.55,d:.55},{x:2.2,z:4.6,w:1.05,d:.35},{x:-7.55,z:-1.6,w:.5,d:.95});
 
 /* ---------- board textures ---------- */
-const PX=small?128:256,BW=16*PX,BH=10*PX,X=x=>(x+8)*PX,Y=z=>(z+5)*PX;
+const PX=small?96:256,BW=16*PX,BH=10*PX,X=x=>(x+8)*PX,Y=z=>(z+5)*PX;
 function paint(mode){
   const c=cnv(BW,BH),g=c.getContext('2d');
   const C={col:{bg:'#03090f',tr:'#0a1a26',via:'#0c1e2b',viaIn:'#030a10',pad:'#b8954c',silk:'#8f9ca5',hole:'#010203',ring:'#a9884a'},
@@ -400,14 +400,17 @@ function sizeLabels(){const k=2*Math.tan(THREE.MathUtils.degToRad(cam.fov)/2)/H;
 
 setLoad(84,'Kernel verified · dm-verity root hash OK');await tick();
 /* post */
-const comp=new EffectComposer(R);comp.addPass(new RenderPass(S,cam));
-const bokeh=small?null:new BokehPass(S,cam,{focus:6,aperture:.00009,maxblur:.009});if(bokeh)comp.addPass(bokeh);
-const bloom=new UnrealBloomPass(new THREE.Vector2(256,256),.85,.55,1.7);comp.addPass(bloom);comp.addPass(new OutputPass());
+/* phones skip post-processing: bloom alone is ~10 extra full-screen passes per frame, plus their shader compiles at load */
+let comp,bokeh=null,bloom=null;
+if(small)comp={render:()=>R.render(S,cam),setSize(){},setPixelRatio(){}};
+else{comp=new EffectComposer(R);comp.addPass(new RenderPass(S,cam));
+ bokeh=new BokehPass(S,cam,{focus:6,aperture:.00009,maxblur:.009});comp.addPass(bokeh);
+ bloom=new UnrealBloomPass(new THREE.Vector2(256,256),.85,.55,1.7);comp.addPass(bloom);comp.addPass(new OutputPass())}
 
 /* camera rig */
 const camP=new THREE.Vector3(...scenes[0].cam),camL=new THREE.Vector3(...scenes[0].cam.slice(3)),tP=new THREE.Vector3(),tL=new THREE.Vector3(),tmp=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0);
 let W=0,H=0,narrow=false;
-function resize(){W=innerWidth;H=innerHeight;R.setSize(W,H,false);comp.setSize(W,H);bloom.resolution.set(W*(small?.5:.75),H*(small?.5:.75));cam.aspect=W/H;narrow=W<760;cam.fov=narrow?50:34;
+function resize(){W=innerWidth;H=innerHeight;R.setSize(W,H,false);comp.setSize(W,H);if(bloom)bloom.resolution.set(W*.75,H*.75);cam.aspect=W/H;narrow=W<760;cam.fov=narrow?50:34;
  if(narrow)cam.setViewOffset(W,H,0,H*.2,W,H);else cam.setViewOffset(W,H,-W*.14,0,W,H);cam.updateProjectionMatrix();measure();if(typeof sizeLabels==='function'&&labelEls.length)sizeLabels()}
 resize();sizeLabels();
 /* mobile URL-bar show/hide fires resize on every scroll: debounce, and skip height-only changes so render targets are not reallocated mid-scroll */
