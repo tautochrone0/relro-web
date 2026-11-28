@@ -48,14 +48,16 @@ try{
     L('three/addons/postprocessing/UnrealBloomPass.js'),L('three/addons/postprocessing/OutputPass.js'),L('three/addons/postprocessing/BokehPass.js')]);
 }catch(e){THREE=null}
 let R=null;
-if(THREE){try{R=new THREE.WebGLRenderer({canvas:$('gl'),antialias:true,powerPreference:'high-performance'})}catch(e){R=null}}
+const MOB=Math.min(innerWidth,innerHeight)<700||matchMedia('(pointer:coarse)').matches;
+if(THREE){try{R=new THREE.WebGLRenderer({canvas:$('gl'),antialias:!MOB,powerPreference:'high-performance'})}catch(e){R=null}}
 if(!R)fallback();else{
 setLoad(40,'Verifying bootloader signature · ECDSA P-256');await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1500))]);
-const small=Math.min(innerWidth,innerHeight)<700;
-let DPR=Math.min(2,Math.max(1.25,devicePixelRatio));R.setPixelRatio(DPR);
+const small=MOB;
+let DPR=small?Math.min(1.5,Math.max(1,devicePixelRatio)):Math.min(2,Math.max(1.25,devicePixelRatio));R.setPixelRatio(DPR);
 R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1;
-R.shadowMap.enabled=true;R.shadowMap.autoUpdate=false;R.shadowMap.type=THREE.PCFSoftShadowMap;
-const ANISO=R.capabilities.getMaxAnisotropy();
+R.shadowMap.enabled=true;R.shadowMap.autoUpdate=false;R.shadowMap.type=small?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;
+const ANISO=Math.min(small?4:16,R.capabilities.getMaxAnisotropy());
+const Phys=o=>{if(!small)return new THREE.MeshPhysicalMaterial(o);const{clearcoat,clearcoatRoughness,transmission,...r}=o;return new THREE.MeshStandardMaterial(r)};
 const BG=0x02060b;
 const S=new THREE.Scene();S.background=new THREE.Color(BG);S.fog=new THREE.Fog(BG,9,30);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(80,80),new THREE.ShadowMaterial({opacity:.6}));floor.rotation.x=-Math.PI/2;floor.position.y=-.9;floor.receiveShadow=true;S.add(floor);
@@ -125,7 +127,7 @@ holes.push([-7.4,-4.4],[7.4,-4.4],[-7.4,4.4],[7.4,4.4]);
 pads.push({x:-1.2,z:-4.5,w:.12,d:.12,round:1},{x:1.2,z:4.55,w:.12,d:.12,round:1},{x:-6.5,z:3.5,w:1.55,d:.55,hdr:1},{x:7.6,z:3.8,w:.55,d:.55},{x:2.2,z:4.6,w:1.05,d:.35},{x:-7.55,z:-1.6,w:.5,d:.95});
 
 /* ---------- board textures ---------- */
-const PX=small?190:256,BW=16*PX,BH=10*PX,X=x=>(x+8)*PX,Y=z=>(z+5)*PX;
+const PX=small?128:256,BW=16*PX,BH=10*PX,X=x=>(x+8)*PX,Y=z=>(z+5)*PX;
 function paint(mode){
   const c=cnv(BW,BH),g=c.getContext('2d');
   const C={col:{bg:'#03090f',tr:'#0a1a26',via:'#0c1e2b',viaIn:'#030a10',pad:'#b8954c',silk:'#8f9ca5',hole:'#010203',ring:'#a9884a'},
@@ -163,7 +165,7 @@ setLoad(68,'Locking JTAG / SWD debug ports');await tick();const GLOW=glowMap();s
 const U={uAcc:{value:(()=>{const c=new THREE.Color(ACC),m=Math.max(c.r,c.g,c.b);return new THREE.Vector3(c.r,c.g,c.b).multiplyScalar(1.25/m)})()},glowMap:{value:GLOW},uTime:{value:0},uPower:{value:.2},uFlow:{value:0},uRed:{value:0}};
 const board=new THREE.Group();S.add(board);
 /* semi-transparent board: the substrate fades, the glowing traces stay bright */
-const topMat=new THREE.MeshPhysicalMaterial({map:MAPS.col,bumpMap:MAPS.bmp,bumpScale:2.2,metalnessMap:MAPS.met,metalness:1,roughnessMap:MAPS.rgh,roughness:1,clearcoat:1,clearcoatRoughness:.24,envMapIntensity:.22,transparent:true,opacity:.42,depthWrite:false});
+const topMat=Phys({map:MAPS.col,bumpMap:MAPS.bmp,bumpScale:2.2,metalnessMap:MAPS.met,metalness:1,roughnessMap:MAPS.rgh,roughness:1,clearcoat:1,clearcoatRoughness:.24,envMapIntensity:.22,transparent:true,opacity:.42,depthWrite:false});
 topMat.onBeforeCompile=sh=>{Object.assign(sh.uniforms,U);sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nuniform sampler2D glowMap;uniform float uTime,uPower,uFlow,uRed;uniform vec3 uAcc;float gA=0.0;')
  .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
  {vec4 gm=texture2D(glowMap,vMapUv);float ph=fract(gm.g+gm.b*5.0-uTime*.55);float cm=pow(ph,9.0)+pow(fract(ph+.5),22.0)*.35;
@@ -171,17 +173,17 @@ topMat.onBeforeCompile=sh=>{Object.assign(sh.uniforms,U);sh.fragmentShader=sh.fr
   vec4 pm=texture2D(metalnessMap,vMetalnessMapUv);gA=max(gA,pm.g*.85);}`)
  .replace('#include <dithering_fragment>','#include <dithering_fragment>\ngl_FragColor.a=max(gl_FragColor.a,gA);')};
 const top=new THREE.Mesh(new THREE.PlaneGeometry(16,10),topMat);top.rotation.x=-Math.PI/2;top.renderOrder=-2;board.add(top);
-const core=new THREE.Mesh(new RoundedBoxGeometry(16,.2,10,2,.02),new THREE.MeshPhysicalMaterial({color:0x0c2a3a,roughness:.35,transparent:true,opacity:.12,depthWrite:false,transmission:0}));core.position.y=-.101;core.renderOrder=-3;board.add(core);
+const core=new THREE.Mesh(new RoundedBoxGeometry(16,.2,10,2,.02),Phys({color:0x0c2a3a,roughness:.35,transparent:true,opacity:.12,depthWrite:false,transmission:0}));core.position.y=-.101;core.renderOrder=-3;board.add(core);
 
 /* ---------- materials & helpers ---------- */
 const M={
- epoxy:new THREE.MeshPhysicalMaterial({color:0x0b0c0e,roughness:.38,clearcoat:.5,clearcoatRoughness:.25}),
+ epoxy:Phys({color:0x0b0c0e,roughness:.38,clearcoat:.5,clearcoatRoughness:.25}),
  tin:new THREE.MeshStandardMaterial({color:0xcfd4d8,metalness:1,roughness:.28}),
  gold:new THREE.MeshStandardMaterial({color:0xe2b85e,metalness:1,roughness:.22}),
  black:new THREE.MeshStandardMaterial({color:0x0a0b0c,roughness:.4}),
  cap:new THREE.MeshStandardMaterial({color:0x6e5a44,roughness:.5}),
  res:new THREE.MeshStandardMaterial({color:0x0e0f10,roughness:.45}),
- sub:new THREE.MeshPhysicalMaterial({color:0x0d1a22,roughness:.35,clearcoat:.8}),
+ sub:Phys({color:0x0d1a22,roughness:.35,clearcoat:.8}),
  alu:new THREE.MeshStandardMaterial({color:0x9aa1a8,metalness:1,roughness:.42}),
  green:new THREE.MeshStandardMaterial({color:0x14402a,roughness:.45}),
  dark:new THREE.MeshStandardMaterial({color:0x030303,roughness:.9})};
@@ -204,7 +206,7 @@ let dieMat=null;
 parts.forEach(([id,kind,x,z,w,d,h,ref,mk])=>{
   comps[id]={x,z,h:kind==='soc'?.34:h,w,d};
   if(kind==='soc'){contact(x,z,w,d,.95);box(w,.1,d,M.sub,x,.05,z,.02);
-    box(2.25,.13,2.25,new THREE.MeshPhysicalMaterial({color:0x0c0e11,metalness:.6,roughness:.32,clearcoat:1,clearcoatRoughness:.3}),x,.165,z,.03);
+    box(2.25,.13,2.25,Phys({color:0x0c0e11,metalness:.6,roughness:.32,clearcoat:1,clearcoatRoughness:.3}),x,.165,z,.03);
     const cs=[];for(let i=0;i<22;i++){const t=-1.3+i*(2.6/21);cs.push(o=>o.position.set(x+t,.115,z-1.38),o=>o.position.set(x+t,.115,z+1.38))}instanced(new THREE.BoxGeometry(.06,.03,.04),M.gold,cs);
     const c=cnv(512,512),g=c.getContext('2d');for(let i=0;i<40;i++)for(let j=0;j<40;j++){const v=.35+rnd()*.65;g.fillStyle=`rgba(255,${Math.round(170*v)},${Math.round(70*v)},${v})`;g.fillRect(16+i*12,16+j*12,8,8)}
     g.strokeStyle='rgba(255,190,110,.9)';g.lineWidth=4;g.strokeRect(8,8,496,496);
@@ -405,9 +407,11 @@ const bloom=new UnrealBloomPass(new THREE.Vector2(256,256),.85,.55,1.7);comp.add
 /* camera rig */
 const camP=new THREE.Vector3(...scenes[0].cam),camL=new THREE.Vector3(...scenes[0].cam.slice(3)),tP=new THREE.Vector3(),tL=new THREE.Vector3(),tmp=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0);
 let W=0,H=0,narrow=false;
-function resize(){W=innerWidth;H=innerHeight;R.setSize(W,H,false);comp.setSize(W,H);bloom.resolution.set(W*.75,H*.75);cam.aspect=W/H;narrow=W<760;cam.fov=narrow?50:34;
+function resize(){W=innerWidth;H=innerHeight;R.setSize(W,H,false);comp.setSize(W,H);bloom.resolution.set(W*(small?.5:.75),H*(small?.5:.75));cam.aspect=W/H;narrow=W<760;cam.fov=narrow?50:34;
  if(narrow)cam.setViewOffset(W,H,0,H*.2,W,H);else cam.setViewOffset(W,H,-W*.14,0,W,H);cam.updateProjectionMatrix();measure();if(typeof sizeLabels==='function'&&labelEls.length)sizeLabels()}
-resize();sizeLabels();addEventListener('resize',resize);
+resize();sizeLabels();
+/* mobile URL-bar show/hide fires resize on every scroll: debounce, and skip height-only changes so render targets are not reallocated mid-scroll */
+let rzT=0,rzW=innerWidth,rzH=innerHeight;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(small&&innerWidth===rzW&&Math.abs(innerHeight-rzH)<160){measure();return}rzW=innerWidth;rzH=innerHeight;resize()},150)});
 const ease=f=>{const x=Math.min(1,Math.max(0,(f-.2)/.65));return x*x*(3-2*x)};
 const tmpC=new THREE.Color(),lerp=(a,b,t)=>a+(b-a)*t,clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
 let last=performance.now(),time=0,active=-1,since=0,impact=0;

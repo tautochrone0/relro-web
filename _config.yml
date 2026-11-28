@@ -15,6 +15,15 @@ url: https://relro.site
 baseurl: ""
 
 three_version: 0.160.0
+# three.js addons main.js imports; preloaded in <head> so they download in parallel
+three_addons:
+  - geometries/RoundedBoxGeometry.js
+  - environments/RoomEnvironment.js
+  - postprocessing/EffectComposer.js
+  - postprocessing/RenderPass.js
+  - postprocessing/UnrealBloomPass.js
+  - postprocessing/OutputPass.js
+  - postprocessing/BokehPass.js
 
 nav:
   - title: Capabilities

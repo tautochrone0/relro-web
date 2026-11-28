@@ -18,6 +18,15 @@
 {% comment %} ?v= changes on every build, so browsers fetch fresh CSS and JS instead of a cached copy. {% endcomment %}
 {% assign v = site.time | date: '%s' %}
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ v }}">
+{% if page.story %}
+{% comment %} The import map must come before any module load; the modulepreloads then fetch three.js and its addons in parallel with the page instead of one after another once main.js runs. {% endcomment %}
+{% assign three = 'https://cdn.jsdelivr.net/npm/three@' | append: site.three_version %}
+<script type="importmap">{"imports":{"three":"{{ three }}/build/three.module.min.js","three/addons/":"{{ three }}/examples/jsm/"}}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="{{ three }}/build/three.module.min.js">
+{% for a in site.three_addons %}<link rel="modulepreload" href="{{ three }}/examples/jsm/{{ a }}">
+{% endfor %}<link rel="modulepreload" href="{{ '/assets/js/main.js' | relative_url }}?v={{ v }}">
+{% endif %}
 </head>
 <body>
 {% if page.story %}
@@ -33,7 +42,6 @@
 
 {% if page.story %}
 <script type="application/json" id="scene-data">{{ site.data.scenes | jsonify }}</script>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@{{ site.three_version }}/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@{{ site.three_version }}/examples/jsm/"}}</script>
 <script type="module" src="{{ '/assets/js/main.js' | relative_url }}?v={{ v }}"></script>
 {% endif %}
 </body>
